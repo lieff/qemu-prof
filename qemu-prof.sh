@@ -1,0 +1,1 @@
+gcc -O2 qemu-prof.cpp -o qemu-prof -lstdc++

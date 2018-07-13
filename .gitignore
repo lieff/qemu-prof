@@ -1,0 +1,4 @@
+qemu-prof
+*.gcda
+*.gcno
+*.gcov
