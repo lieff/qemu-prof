@@ -7,7 +7,7 @@ We can parse this information and use it for profiling.
 Execution example:
 
 ```
-$ qemu-aarch64 -d in_asm,exec,nochain minimp3_arm vectors/l3-si_huff.bit >log.txt 2>&1
+$ qemu-aarch64 -d in_asm,exec,nochain minimp3_arm vectors/l3-si_huff.bit 2>log.txt
 $ ./qemu-prof log.txt
 ```
 or

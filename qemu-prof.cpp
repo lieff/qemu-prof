@@ -60,8 +60,8 @@ int main(int argc, char **argv)
             std::getline(*infile, line);
             if (line.empty())
             {
-                printf("error: empty in_asm block\n");
-                exit(1);
+                printf("warning: empty in_asm block\n");
+                continue;
             }
             uint64_t addr = strtoul(line.c_str(), NULL, 16);
             auto it2 = blocks.find(addr);
@@ -85,9 +85,15 @@ int main(int argc, char **argv)
         } else if (line.size() >= 35 && 0 == strncmp(line.c_str(), "Trace ", 6))
         {
             uint64_t addr = strtoul(strstr(line.c_str(), ":") + 2, NULL, 16);
-            const char *func_name = strstr(line.c_str(), "]") + 2;
+            const char *func_name = strstr(line.c_str(), "]") + 1; if (*func_name && *func_name == ' ') func_name++;
             //printf("Trace %s 0x%" PRIx64 "\n", func_name, addr);
-            block &b = blocks.find(addr)->second;
+            auto it = blocks.find(addr);
+            if (it == blocks.end())
+            {
+                printf("warning: block address not found\n");
+                continue;
+            }
+            block &b = it->second;
             function &func = funcs.find(b.func_name)->second;
             b.executed++;
             func.executed++;
