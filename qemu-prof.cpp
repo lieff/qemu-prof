@@ -59,7 +59,7 @@ int main(int argc, char **argv)
             if (0 == func_name.length())
             {
                 char buf[128];
-                snprintf(buf, sizeof(buf), "loc_%" PRIu64, addr);
+                snprintf(buf, sizeof(buf), "loc_%" PRIx64, addr);
                 func_name = buf;
             }
             auto it = funcs.find(func_name);
@@ -98,7 +98,7 @@ int main(int argc, char **argv)
             auto it = blocks.find(addr);
             if (it == blocks.end())
             {
-                printf("warning: block address not found\n");
+                printf("warning: block address 0x%" PRIx64 " not found\n", addr);
                 continue;
             }
             block &b = it->second;
