@@ -47,7 +47,21 @@ int main(int argc, char **argv)
             continue;
         if (0 == strncmp(line.c_str(), "IN: ", 4))
         {
-            const char *func_name = line.c_str() + 4;
+            std::string func_name = line.c_str() + 4;
+            std::getline(*infile, line);
+            if (line.empty())
+            {
+                printf("warning: empty in_asm block\n");
+                continue;
+            }
+            uint64_t addr = strtoul(line.c_str(), NULL, 16);
+
+            if (0 == func_name.length())
+            {
+                char buf[128];
+                snprintf(buf, sizeof(buf), "loc_%" PRIu64, addr);
+                func_name = buf;
+            }
             auto it = funcs.find(func_name);
             if (funcs.end() == it)
             {
@@ -57,13 +71,7 @@ int main(int argc, char **argv)
                 it = funcs.find(func_name);
             }
             function &func = it->second;
-            std::getline(*infile, line);
-            if (line.empty())
-            {
-                printf("warning: empty in_asm block\n");
-                continue;
-            }
-            uint64_t addr = strtoul(line.c_str(), NULL, 16);
+
             auto it2 = blocks.find(addr);
             if (blocks.end() == it2)
             {
