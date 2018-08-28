@@ -90,9 +90,20 @@ int main(int argc, char **argv)
                 b.instr.push_back(line);
             }
             //printf("%s 0x%" PRIx64 " size=%d\n", func.name.c_str(), b.addr, (int)b.instr.size());
-        } else if (line.size() >= 35 && 0 == strncmp(line.c_str(), "Trace ", 6))
+        } else if (line.size() >= 32 && 0 == strncmp(line.c_str(), "Trace ", 6))
         {
-            uint64_t addr = strtoul(strstr(line.c_str(), ":") + 2, NULL, 16);
+            const char *addr_str = strstr(line.c_str(), ":");
+            if (!addr_str)
+            {
+                addr_str = strstr(line.c_str(), "[");
+                if (!addr_str)
+                {
+                    printf("error: unknown trace format\n");
+                    break;
+                }
+                addr_str++;
+            }
+            uint64_t addr = strtoul(addr_str + 2, NULL, 16);
             const char *func_name = strstr(line.c_str(), "]") + 1; if (*func_name && *func_name == ' ') func_name++;
             //printf("Trace %s 0x%" PRIx64 "\n", func_name, addr);
             auto it = blocks.find(addr);
