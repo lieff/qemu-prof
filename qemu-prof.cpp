@@ -95,14 +95,23 @@ int main(int argc, char **argv)
             const char *addr_str = strstr(line.c_str(), ":");
             if (!addr_str)
             {
-                addr_str = strstr(line.c_str(), "[");
-                if (!addr_str)
-                {
-                    printf("error: unknown trace format\n");
-                    break;
-                }
-                addr_str++;
+                printf("error: unknown trace format\n");
+                break;
             }
+            addr_str = strstr(addr_str, "[");
+            if (!addr_str)
+            {
+                printf("error: unknown trace format\n");
+                break;
+            }
+            addr_str = strstr(addr_str, "/");
+            if (!addr_str)
+            {
+                printf("error: unknown trace format\n");
+                break;
+            }
+            addr_str++;
+
             uint64_t addr = strtoul(addr_str + 2, NULL, 16);
             const char *func_name = strstr(line.c_str(), "]") + 1; if (*func_name && *func_name == ' ') func_name++;
             //printf("Trace %s 0x%" PRIx64 "\n", func_name, addr);
